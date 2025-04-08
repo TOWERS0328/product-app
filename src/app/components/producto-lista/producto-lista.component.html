@@ -1,0 +1,30 @@
+<h2>Lista de Productos</h2>
+
+<table *ngIf="productos.length > 0; else noProductos" border="1">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Precio</th>
+      <th>Fecha de Caducidad</th>
+      <th>Categoría</th>
+      <th>Descuento</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let producto of productos; let i = index">
+      <td>{{ producto.nombre }}</td>
+      <td>{{ producto.precio | currency }}</td>
+      <td>{{ producto.fechaCaducidad | date }}</td>
+      <td>{{ producto.categoria }}</td>
+      <td>{{ producto.tieneDescuento ? 'Sí' : 'No' }}</td>
+      <td>
+        <button (click)="eliminar(i)">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #noProductos>
+  <p>No hay productos registrados.</p>
+</ng-template>
