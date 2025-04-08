@@ -7,32 +7,47 @@
 
       <form [formGroup]="formulario" (ngSubmit)="guardar()" novalidate>
 
-        <!-- Nombre del producto -->
+        <!-- Nombre -->
         <div class="mb-3">
           <label for="nombre" class="form-label fw-semibold">Nombre del producto</label>
           <input type="text" id="nombre" formControlName="nombre" class="form-control"
-                 [class.is-invalid]="f.nombre.invalid && f.nombre.touched"
-                 [class.is-valid]="f.nombre.valid && f.nombre.touched">
+                 [class.is-invalid]="f['nombre'].invalid && f['nombre'].touched"
+                 [class.is-valid]="f['nombre'].valid && f['nombre'].touched">
           <div class="invalid-feedback">Debe tener al menos 3 caracteres.</div>
         </div>
 
         <!-- Precio -->
         <div class="mb-3">
-          <label for="precio" class="form-label fw-semibold">Precio ($)</label>
+          <label for="precio" class="form-label fw-semibold">Precio</label>
           <input type="number" id="precio" formControlName="precio" class="form-control"
-                 [class.is-invalid]="f.precio.invalid && f.precio.touched"
-                 [class.is-valid]="f.precio.valid && f.precio.touched">
+                 [class.is-invalid]="f['precio'].invalid && f['precio'].touched"
+                 [class.is-valid]="f['precio'].valid && f['precio'].touched">
           <div class="invalid-feedback">Debe ser mayor que 0.</div>
+        </div>
+
+        <!-- Moneda -->
+        <div class="mb-3">
+          <label for="moneda" class="form-label fw-semibold">Moneda</label>
+          <select id="moneda" formControlName="moneda" class="form-select"
+                  [class.is-invalid]="f['moneda'].invalid && f['moneda'].touched"
+                  [class.is-valid]="f['moneda'].valid && f['moneda'].touched">
+            <option value="">Seleccione moneda</option>
+            <option value="USD">Dólar estadounidense (USD)</option>
+            <option value="COP">Peso colombiano (COP)</option>
+            <option value="EUR">Euro (EUR)</option>
+            <option value="MXN">Peso mexicano (MXN)</option>
+          </select>
+          <div class="invalid-feedback">Seleccione un tipo de moneda.</div>
         </div>
 
         <!-- Fecha de Caducidad -->
         <div class="mb-3">
           <label for="fechaCaducidad" class="form-label fw-semibold">Fecha de caducidad</label>
           <input type="date" id="fechaCaducidad" formControlName="fechaCaducidad" class="form-control"
-                 [class.is-invalid]="f.fechaCaducidad.invalid && f.fechaCaducidad.touched"
-                 [class.is-valid]="f.fechaCaducidad.valid && f.fechaCaducidad.touched">
+                 [class.is-invalid]="f['fechaCaducidad'].invalid && f['fechaCaducidad'].touched"
+                 [class.is-valid]="f['fechaCaducidad'].valid && f['fechaCaducidad'].touched">
           <div class="invalid-feedback">
-            {{ f.fechaCaducidad.errors?.required ? 'La fecha es obligatoria.' : 'Debe ser una fecha futura.' }}
+            {{ f['fechaCaducidad'].errors?.['required'] ? 'La fecha es obligatoria.' : 'Debe ser una fecha futura.' }}
           </div>
         </div>
 
@@ -40,18 +55,27 @@
         <div class="mb-3">
           <label for="categoria" class="form-label fw-semibold">Categoría</label>
           <select id="categoria" formControlName="categoria" class="form-select"
-                  [class.is-invalid]="f.categoria.invalid && f.categoria.touched"
-                  [class.is-valid]="f.categoria.valid && f.categoria.touched">
+                  [class.is-invalid]="f['categoria'].invalid && f['categoria'].touched"
+                  [class.is-valid]="f['categoria'].valid && f['categoria'].touched">
             <option value="">Seleccione una categoría</option>
             <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
           </select>
           <div class="invalid-feedback">Seleccione una categoría válida.</div>
         </div>
 
+        <!-- Tiene Descuento -->
+        <div class="form-check mb-3">
+          <input type="checkbox" id="tieneDescuento" formControlName="tieneDescuento" class="form-check-input">
+          <label for="tieneDescuento" class="form-check-label">¿Tiene descuento?</label>
+        </div>
+
         <!-- Descuento -->
-        <div class="form-check mb-4">
-          <input type="checkbox" id="descuento" formControlName="descuento" class="form-check-input">
-          <label for="descuento" class="form-check-label">¿Tiene descuento?</label>
+        <div class="mb-4" *ngIf="f['tieneDescuento'].value">
+          <label for="descuento" class="form-label fw-semibold">Descuento (%)</label>
+          <input type="number" id="descuento" formControlName="descuento" class="form-control"
+                 [class.is-invalid]="f['descuento'].invalid && f['descuento'].touched"
+                 [class.is-valid]="f['descuento'].valid && f['descuento'].touched">
+          <div class="invalid-feedback">Ingrese un valor entre 1 y 100.</div>
         </div>
 
         <button type="submit" class="btn btn-success w-100 py-2 fw-bold rounded-pill">

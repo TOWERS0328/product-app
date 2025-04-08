@@ -1,30 +1,57 @@
-<h2>Lista de Productos</h2>
+<div class="container mt-5">
+  <h3 class="mb-4 text-success fw-bold">📦 Lista de Productos</h3>
 
-<table *ngIf="productos.length > 0; else noProductos" border="1">
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>Precio</th>
-      <th>Fecha de Caducidad</th>
-      <th>Categoría</th>
-      <th>Descuento</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let producto of productos; let i = index">
-      <td>{{ producto.nombre }}</td>
-      <td>{{ producto.precio | currency }}</td>
-      <td>{{ producto.fechaCaducidad | date }}</td>
-      <td>{{ producto.categoria }}</td>
-      <td>{{ producto.tieneDescuento ? 'Sí' : 'No' }}</td>
-      <td>
-        <button (click)="eliminar(i)">Eliminar</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+  <div class="row g-4">
+    <div class="col-md-6 col-lg-4" *ngFor="let producto of productos; let i = index">
+      <div class="card shadow-sm border-0 rounded-4 h-100">
+        <div class="card-header bg-light border-bottom-0 rounded-top-4">
+          <h5 class="card-title mb-0 fw-bold text-primary">{{ producto.nombre }}</h5>
+        </div>
+        <div class="card-body">
 
-<ng-template #noProductos>
-  <p>No hay productos registrados.</p>
-</ng-template>
+
+
+
+          <!-- PRECIO CON/SIN DESCUENTO -->
+          <p class="mb-1">
+            <strong>💲 Precio:</strong>
+            <span *ngIf="producto.tieneDescuento; else precioNormal">
+              <s class="text-muted me-2">
+                {{ producto.precio | currency:producto.moneda:'symbol' }}
+              </s>
+              <b class="text-success">
+                {{
+                  (producto.precio - (producto.precio * producto.descuento / 100))
+                  | currency:producto.moneda:'symbol'
+                }}
+              </b>
+            </span>
+            <ng-template #precioNormal>
+              <span>{{ producto.precio | currency:producto.moneda:'symbol' }}</span>
+            </ng-template>
+            <span class="text-muted">({{ producto.moneda }})</span>
+          </p>
+
+          <p class="mb-1"><strong>📅 Vence:</strong> {{ producto.fechaCaducidad | date: 'longDate' }}</p>
+          <p class="mb-1"><strong>📂 Categoría:</strong> {{ producto.categoria }}</p>
+
+          <!-- DESCUENTO -->
+          <p class="mb-1">
+            <strong>🏷️ Descuento:</strong>
+            <span *ngIf="producto.tieneDescuento; else sinDescuento">
+              {{ producto.descuento }}%
+            </span>
+            <ng-template #sinDescuento>
+              <span class="text-muted">No aplica</span>
+            </ng-template>
+          </p>
+
+        </div>
+        <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between">
+          <button class="btn btn-outline-primary btn-sm rounded-pill px-3" (click)="editar(i)">✏️ Editar</button>
+          <button class="btn btn-outline-danger btn-sm rounded-pill px-3" (click)="eliminar(i)">🗑️ Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
