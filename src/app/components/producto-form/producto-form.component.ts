@@ -22,20 +22,21 @@ export class ProductoFormComponent implements OnInit {
     this.formulario = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       precio: [0, [Validators.required, Validators.min(1)]],
+      moneda: ['', Validators.required],
       fechaCaducidad: ['', [Validators.required, this.fechaFuturaValidator]],
       categoria: ['', Validators.required],
       tieneDescuento: [false],
       descuento: [0]
     });
 
-    this.formulario = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(3)]],
-      precio: [0, [Validators.required, Validators.min(1)]],
-      moneda: ['', Validators.required], // <-- NUEVO CAMPO
-      fechaCaducidad: ['', [Validators.required, this.fechaFuturaValidator]],
-      categoria: ['', Validators.required],
-      tieneDescuento: [false],
-      descuento: [0]
+    this.formulario.get('tieneDescuento')?.valueChanges.subscribe(valor => {
+      const descuentoCtrl = this.formulario.get('descuento');
+      if (valor) {
+        descuentoCtrl?.setValidators([Validators.required, Validators.min(1), Validators.max(100)]);
+      } else {
+        descuentoCtrl?.clearValidators();
+      }
+      descuentoCtrl?.updateValueAndValidity();
     });
   }
 
@@ -52,7 +53,7 @@ export class ProductoFormComponent implements OnInit {
     const producto: Producto = {
       nombre: this.f['nombre'].value,
       precio: this.f['precio'].value,
-      moneda: this.f['moneda'].value, // <-- Asegúrate de incluir esto
+      moneda: this.f['moneda'].value,
       fechaCaducidad: this.f['fechaCaducidad'].value,
       categoria: this.f['categoria'].value,
       tieneDescuento: this.f['tieneDescuento'].value,
@@ -62,7 +63,6 @@ export class ProductoFormComponent implements OnInit {
     this.productoService.agregarProducto(producto);
     alert('✅ Producto guardado correctamente');
 
-    // 👉 Aquí haces el reset con los valores por defecto
     this.formulario.reset({
       nombre: '',
       precio: 0,
@@ -74,11 +74,16 @@ export class ProductoFormComponent implements OnInit {
     });
   }
 
-
   fechaFuturaValidator(control: AbstractControl) {
-    const fechaActual = new Date();
-    const fechaIngresada = new Date(control.value);
     if (!control.value) return null;
-    return fechaIngresada > fechaActual ? null : { fechaPasada: true };
+
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    const fecha = new Date(control.value);
+    fecha.setHours(0, 0, 0, 0); // 🔁 Esto es lo que faltaba
+
+    return fecha > hoy ? null : { fechaPasada: true };
   }
+
 }

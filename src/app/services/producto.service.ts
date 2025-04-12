@@ -23,4 +23,5 @@ export class ProductoService {
     productos.splice(index, 1);
     localStorage.setItem(this.key, JSON.stringify(productos));
   }
+  
 }

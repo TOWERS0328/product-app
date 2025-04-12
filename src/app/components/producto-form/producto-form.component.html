@@ -41,15 +41,21 @@
         </div>
 
         <!-- Fecha de Caducidad -->
-        <div class="mb-3">
-          <label for="fechaCaducidad" class="form-label fw-semibold">Fecha de caducidad</label>
-          <input type="date" id="fechaCaducidad" formControlName="fechaCaducidad" class="form-control"
-                 [class.is-invalid]="f['fechaCaducidad'].invalid && f['fechaCaducidad'].touched"
-                 [class.is-valid]="f['fechaCaducidad'].valid && f['fechaCaducidad'].touched">
-          <div class="invalid-feedback">
-            {{ f['fechaCaducidad'].errors?.['required'] ? 'La fecha es obligatoria.' : 'Debe ser una fecha futura.' }}
-          </div>
+  <div class="mb-3">
+  <label for="fechaCaducidad" class="form-label fw-semibold">Fecha de caducidad</label>
+  <input type="date" id="fechaCaducidad" formControlName="fechaCaducidad" class="form-control"
+         [class.is-invalid]="f['fechaCaducidad'].invalid && f['fechaCaducidad'].touched"
+         [class.is-valid]="f['fechaCaducidad'].valid && f['fechaCaducidad'].touched">
+
+          <div class="invalid-feedback" *ngIf="f['fechaCaducidad'].hasError('required') && f['fechaCaducidad'].touched">
+            La fecha es obligatoria.
+         </div>
+
+        <div *ngIf="f['fechaCaducidad'].hasError('fechaPasada') && f['fechaCaducidad'].touched">
+          <small class="text-danger">La fecha debe ser posterior a hoy 📅</small>
+         </div>
         </div>
+
 
         <!-- Categoría -->
         <div class="mb-3">

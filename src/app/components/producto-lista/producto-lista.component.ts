@@ -23,11 +23,8 @@ export class ProductoListaComponent implements OnInit {
     this.productoService.eliminarProducto(index);
     this.productos = this.productoService.obtenerProductos();
   }
-  editar(index: number) {
-    const producto = this.productos[index];
-    // Aquí podrías emitir un evento, navegar o llenar el formulario.
-    console.log('Editar producto:', producto);
-  }
+
+ 
 
 
 }
